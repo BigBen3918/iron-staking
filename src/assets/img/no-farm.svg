@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="181" viewBox="0 0 110 181">
+    <defs>
+        <linearGradient id="zcoitf4p8a" x1="100%" x2="8.378%" y1="66.667%" y2="35.453%">
+            <stop offset="0%" stop-color="#223BE7" stop-opacity=".425"/>
+            <stop offset="100%" stop-color="#3443F9" stop-opacity=".218"/>
+        </linearGradient>
+        <linearGradient id="scorbxhmfb" x1="100%" x2="8.378%" y1="87.498%" y2="17.271%">
+            <stop offset="0%" stop-color="#223BE7" stop-opacity=".425"/>
+            <stop offset="100%" stop-color="#3443F9" stop-opacity=".218"/>
+        </linearGradient>
+        <linearGradient id="ifi1eb0vrc" x1="66.669%" x2="36.124%" y1="100%" y2="6.359%">
+            <stop offset="0%" stop-color="#223BE7" stop-opacity=".425"/>
+            <stop offset="100%" stop-color="#3443F9" stop-opacity=".218"/>
+        </linearGradient>
+        <linearGradient id="nsyqttgjhd" x1="66.666%" x2="36.126%" y1="100%" y2="6.359%">
+            <stop offset="0%" stop-color="#223BE7" stop-opacity=".425"/>
+            <stop offset="100%" stop-color="#3443F9" stop-opacity=".218"/>
+        </linearGradient>
+        <linearGradient id="01yppcmcwe" x1="100%" x2="8.378%" y1="66.666%" y2="35.454%">
+            <stop offset="0%" stop-color="#223BE7" stop-opacity=".425"/>
+            <stop offset="100%" stop-color="#3443F9" stop-opacity=".218"/>
+        </linearGradient>
+        <linearGradient id="j40540f1kf" x1="100%" x2="8.378%" y1="87.523%" y2="17.249%">
+            <stop offset="0%" stop-color="#3292FF"/>
+            <stop offset="100%" stop-color="#3739ED"/>
+        </linearGradient>
+        <linearGradient id="v0ziloghyg" x1="100%" x2="8.378%" y1="87.502%" y2="17.267%">
+            <stop offset="0%" stop-color="#3292FF"/>
+            <stop offset="100%" stop-color="#3739ED"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g>
+                    <g fill="url(#zcoitf4p8a)" opacity=".156" transform="translate(-1055 -323) translate(1055 323) translate(0 29) translate(.617 88.6)">
+                        <path d="M54.884 63.33L0.383 31.862 54.881 0.401 109.378 31.865z"/>
+                    </g>
+                    <path fill="url(#scorbxhmfb)" d="M54.931 62.93L0.43 31.465 0.43 94.394 54.931 125.859 109.428 94.394 109.428 31.465z" opacity=".399" transform="translate(-1055 -323) translate(1055 323) translate(0 29)"/>
+                    <path fill="url(#ifi1eb0vrc)" d="M54.931 125.859L0.43 94.394 0.43 31.465 54.931 62.93z" opacity=".66" transform="translate(-1055 -323) translate(1055 323) translate(0 29)"/>
+                    <path fill="url(#nsyqttgjhd)" d="M109.43 94.393L54.932 125.858 54.932 62.929 109.43 31.464z" opacity=".66" transform="translate(-1055 -323) translate(1055 323) translate(0 29)"/>
+                    <path fill="url(#01yppcmcwe)" d="M54.927 0L0.429 31.464 54.93 62.929 109.428 31.464z" opacity=".66" transform="translate(-1055 -323) translate(1055 323) translate(0 29)"/>
+                </g>
+                <g fill-rule="nonzero" opacity=".08">
+                    <path fill="url(#j40540f1kf)" d="M59.915 1.456L30.773 51.932l.003-11.08L50.38 6.897l9.535-5.44zm-59.892.06l9.537 5.44 19.57 33.897-.003 11.072L.023 1.515zM59.063.047l-9.707 5.538H10.479L.772.048h58.29z" transform="translate(-1055 -323) translate(1055 323) translate(25)"/>
+                    <path fill="url(#v0ziloghyg)" d="M14.63 8.971L29.952 35.51 45.274 8.971z" transform="translate(-1055 -323) translate(1055 323) translate(25)"/>
+                </g>
+                <g fill-rule="nonzero">
+                    <path fill="url(#j40540f1kf)" d="M59.915 1.456L30.773 51.932l.003-11.08L50.38 6.897l9.535-5.44zm-59.892.06l9.537 5.44 19.57 33.897-.003 11.072L.023 1.515zM59.063.047l-9.707 5.538H10.479L.772.048h58.29z" transform="translate(-1055 -323) translate(1055 323) translate(25 20)"/>
+                    <path fill="url(#v0ziloghyg)" d="M14.63 8.971L29.952 35.51 45.274 8.971z" transform="translate(-1055 -323) translate(1055 323) translate(25 20)"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

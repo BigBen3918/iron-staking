@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
+    <defs>
+        <linearGradient id="sj0argymob" x1="50%" x2="50%" y1="100%" y2="0%">
+            <stop offset="0%" stop-color="#FFCD63"/>
+            <stop offset="100%" stop-color="#FF7F3F"/>
+        </linearGradient>
+        <linearGradient id="fehtptgk8d" x1="50%" x2="50%" y1="100%" y2="0%">
+            <stop offset="0%" stop-color="#FFCD63"/>
+            <stop offset="100%" stop-color="#FF7F3F"/>
+        </linearGradient>
+        <linearGradient id="aftqunjx8e" x1="50%" x2="50%" y1="100%" y2="0%">
+            <stop offset="0%" stop-color="#FFCD63"/>
+            <stop offset="100%" stop-color="#FF7F3F"/>
+        </linearGradient>
+        <circle id="5eqlpiqw4a" cx="24" cy="8" r="8"/>
+        <mask id="d7js9gmfxc" width="16" height="16" x="0" y="0" fill="#fff" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox">
+            <use xlink:href="#5eqlpiqw4a"/>
+        </mask>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <g transform="translate(-835 -1330) translate(820 1118) translate(15 212)">
+                    <use stroke="url(#sj0argymob)" stroke-dasharray="1" stroke-width="2" mask="url(#d7js9gmfxc)" xlink:href="#5eqlpiqw4a"/>
+                    <circle cx="8" cy="24" r="8" fill="url(#sj0argymob)"/>
+                    <path fill="#983400" d="M13 21.235l-4.866 8.428v-1.85l3.274-5.67L13 21.236zm-10 .01l1.592.908 3.268 5.66v1.849L3 21.245zm7.555 1.245l-2.558 4.43-2.558-4.43h5.116zM12.858 21l-1.621.925H4.746L3.126 21h9.732z"/>
+                    <path fill="url(#fehtptgk8d)" d="M29 4.235l-4.866 8.428v-1.85l3.274-5.67L29 4.236zm-10 .01l1.592.908 3.268 5.66v1.849L19 4.245zm7.555 1.245l-2.558 4.43-2.558-4.43h5.116zM28.858 4l-1.621.925h-6.491L19.126 4h9.732z"/>
+                    <path stroke="url(#aftqunjx8e)" d="M5 13.17L5 5 12.569 5"/>
+                    <path stroke="url(#aftqunjx8e)" d="M20 27.17L20 19 27.569 19" transform="rotate(-180 23.785 23.085)"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

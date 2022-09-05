@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="31" height="24" viewBox="0 0 31 24">
+    <defs>
+        <linearGradient id="k8t61b61ra" x1="8.819%" x2="74.963%" y1="14.845%" y2="70.373%">
+            <stop offset="0%" stop-color="#E0A335"/>
+            <stop offset="24.001%" stop-color="#E2BB52"/>
+            <stop offset="54.425%" stop-color="#FFF795"/>
+            <stop offset="75%" stop-color="#E8C35A"/>
+            <stop offset="100%" stop-color="#E09B21"/>
+        </linearGradient>
+        <linearGradient id="ymu364ft4b" x1="-8.61%" x2="67.627%" y1="26.89%" y2="65.38%">
+            <stop offset="0%" stop-color="#D19732"/>
+            <stop offset="63.873%" stop-color="#FFE87A"/>
+            <stop offset="100%" stop-color="#A37320"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g>
+            <g>
+                <path fill="url(#k8t61b61ra)" d="M25.389 6.744c-.71-1.005-1.656-2.338-2.152-3.018H7.11L5 6.706l12.695 14.397L30.3 6.684 25.697 0H4.767L0 6.74l15.177 17.258 1.404-1.62L2.72 6.63 5.79 2.246h18.86l2.965 4.365-9.917 11.278L7.78 6.54l.475-.658H22.08l.52.708-6.36 7.226 1.457 1.636 7.692-8.707z" transform="translate(-928 -344) translate(928 344)"/>
+                <path fill="url(#ymu364ft4b)" d="M10.294 7.182L15.128 12.569 20.005 7.182z" transform="translate(-928 -344) translate(928 344)"/>
+            </g>
+        </g>
+    </g>
+</svg>
