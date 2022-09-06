@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 
-export const supportChainId = Number(process.env.REACT_APP_CHAINID) || 4002;
+export const supportChainId = Number(process.env.REACT_APP_CHAINID) || 250;
 
 const RPCS: any = {
   1: 'https://main-light.eth.linkpool.io/',
@@ -12,7 +12,7 @@ const RPCS: any = {
 
 const providers: any = {
   // 1: new ethers.providers.JsonRpcProvider(RPCS[1]),
-  // 250: new ethers.providers.JsonRpcProvider(RPCS[250]),
+  250: new ethers.providers.JsonRpcProvider(RPCS[250]),
   4002: new ethers.providers.JsonRpcProvider(RPCS[4002]),
   // 1337: new ethers.providers.JsonRpcProvider(RPCS[1337]),
   // 31337: new ethers.providers.JsonRpcProvider(RPCS[31337]),
