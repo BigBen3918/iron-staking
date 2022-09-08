@@ -14,7 +14,11 @@ import Sidebar from './components/Sidebar';
 import loadable from '@loadable/component';
 import bgSite from './assets/img/bg-site.png';
 import { UseWalletProvider } from 'use-wallet';
+import 'react-notifications-component/dist/theme.css';
+import { ReactNotifications } from 'react-notifications-component';
+
 import BlockchainProvider from './contexts/blockchainProvider';
+
 const Dashboard = loadable(() => import('./views/Dashboard'));
 const Bank = loadable(() => import('./views/Bank'));
 const Farms = loadable(() => import('./views/Farms'));
@@ -60,12 +64,17 @@ const App: React.FC = () => {
 const Providers: React.FC = ({ children }) => {
   return (
     <ThemeProvider theme={theme}>
+      <ReactNotifications />
       <UseWalletProvider
+        autoConnect={true}
         connectors={{
+          injected: {
+            chainId: [250],
+          },
           walletconnect: {
             rpc: {
               1: 'https://main-light.eth.linkpool.io/',
-              3: 'https://rpc-url',
+              250: 'https://rpc.ftm.tools/',
               4002: 'https://ftm-test.babylonswap.finance',
             },
           },

@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { Store } from 'react-notifications-component';
 /**
  * set delay for delayTimes
  * @param {Number} delayTimes - timePeriod for delay
@@ -37,4 +38,22 @@ function styledAddress(address: string) {
   return address.slice(0, 4) + '...' + address.slice(-4);
 }
 
-export { delay, toBigNum, fromBigNum, styledAddress };
+type NOTIFICATION_TYPE = 'success' | 'danger' | 'info' | 'default' | 'warning';
+
+const AddNotification = (title: string, message: string, type: NOTIFICATION_TYPE) => {
+  Store.addNotification({
+    title: title,
+    message: message,
+    type: type,
+    container: 'top-right',
+    insert: 'top',
+    animationIn: ['animate__animated animate__fadeIn'], // `animate.css v4` classes
+    animationOut: ['animate__animated animate__fadeOut'], // `animate.css v4` classes
+    dismiss: {
+      duration: 2000,
+      onScreen: true,
+    },
+  });
+};
+
+export { delay, toBigNum, fromBigNum, styledAddress, AddNotification };

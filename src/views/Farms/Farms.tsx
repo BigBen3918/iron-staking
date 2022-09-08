@@ -16,6 +16,7 @@ import { buyTokenLinks, createAddLiquidityLink, createRemoveLiquidityLink } from
 import { flatten } from 'lodash';
 import Switch from 'react-switch';
 import Popover from 'src/components/Popover';
+import { useBlockchainContext } from 'src/contexts/blockchainProvider';
 
 type PoolDepositStatus = {
   id: number;
@@ -23,6 +24,7 @@ type PoolDepositStatus = {
 };
 
 const Farms: React.FC = () => {
+  const [state] = useBlockchainContext();
   const config = useConfiguration();
   const [expanded, setExpanded] = useState(-1);
   const [data, setData] = useState<FarmData>();
@@ -66,11 +68,12 @@ const Farms: React.FC = () => {
   }, [fetchFarmData]);
 
   const tvl = useMemo(() => {
-    if (!data?.total) {
-      return;
+    let totalTvl = 0;
+    for (const id in state.tvls) {
+      totalTvl += Number(state.tvls[id]);
     }
-    return (+data?.total).toFixed(0);
-  }, [data]);
+    return Number(totalTvl).toFixed(0);
+  }, [state.tvls]);
 
   const getPoolData = useCallback(
     (pid: number, masterChef: string) => {

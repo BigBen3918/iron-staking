@@ -5,7 +5,7 @@ import Loading from 'src/components/Loading';
 import TokenSymbol from 'src/components/TokenSymbol';
 import { PoolConfig } from 'src/iron-bank/config';
 import theme from 'src/theme';
-import { numberWithCommas } from 'src/utils/formatBN';
+import { numberWithCommas, styledNumber } from 'src/utils/formatBN';
 import styled from 'styled-components';
 import TokenSymbolMini from '../../../components/TokenSymbol/TokenSymbolMini';
 import { useBlockNumber } from 'src/state/application/hooks';
@@ -14,8 +14,9 @@ import StakeLPComponent from './StakeLPComponent';
 import UnstakeLPComponent from './UnstakeLPComponent';
 import Spacer from 'src/components/Spacer';
 import { BigNumber } from '@ethersproject/bignumber';
-import { toBigNum } from 'src/utils';
+import { AddNotification, fromBigNum, toBigNum } from 'src/utils';
 import { useBlockchainContext } from 'src/contexts/blockchainProvider';
+import { ethers } from 'ethers';
 
 export type FarmItemProps = {
   index: number;
@@ -31,9 +32,14 @@ export type FarmItemProps = {
 type FarmItemStatus = {
   balance: any;
   deposited: any;
-  tvl: string | null;
-  apr: string | null;
-  apy: string | null;
+  allowance: BigNumber;
+  tvl: number | null;
+  apr: number | null;
+  apy: number | null;
+  share: number;
+  pendingReward: number;
+  isLoaded?: boolean;
+  wantTokenPrice?: number;
 };
 
 const FarmItem: React.FC<FarmItemProps> = ({
@@ -98,31 +104,6 @@ const FarmItem: React.FC<FarmItemProps> = ({
     [farmUrl, toggle, index],
   );
 
-  const tvl = useMemo(() => {
-    if (!data?.tvl) {
-      return;
-    }
-    return (+data?.tvl).toFixed(0);
-  }, [data]);
-
-  const apr = useMemo(() => {
-    if (!data?.apr) {
-      return;
-    }
-    return parseFloat(data?.apr + '').toFixed(0);
-  }, [data]);
-
-  const apy = useMemo(() => {
-    if (!data?.apr) {
-      return;
-    }
-    const numberOfCompoundingPerYear = 365; // daily compound
-    const apr = parseFloat(data?.apr + '') / 100;
-    const apy =
-      100 * (Math.pow(1 + apr / numberOfCompoundingPerYear, numberOfCompoundingPerYear) - 1);
-    return apy.toFixed(0);
-  }, [data]);
-
   const rewardPerDay = useMemo(() => {
     if (!data?.rewardPerBlock) {
       return;
@@ -131,45 +112,210 @@ const FarmItem: React.FC<FarmItemProps> = ({
     return numberWithCommas((parseFloat(data.rewardPerBlock) * numberOfBlockPerDay).toFixed(0));
   }, [data]);
 
-  const myShare = BigNumber.from(0);
+  // new states
+  const [
+    state,
+    {
+      dispatch,
+      checkPoolStatus,
+      checkUserStatus,
+      checkLPPrice,
+      approveERC20,
+      deposit,
+      withdraw,
+    },
+  ] = useBlockchainContext();
+
+  const [status, setStatus] = useState<FarmItemStatus>({
+    balance: null,
+    deposited: null,
+    allowance: null,
+    tvl: null,
+    apr: null,
+    apy: null,
+    share: 0,
+    pendingReward: 0,
+    isLoaded: false,
+    wantTokenPrice: 0,
+  });
 
   const isShow = useMemo(() => {
     if (visible && !onlyDeposit) return true;
-    if (visible && onlyDeposit && myShare?.gt(0)) return true;
+    if (visible && onlyDeposit && status.share > 0) return true;
     return false;
-  }, [visible, onlyDeposit, myShare]);
+  }, [visible, onlyDeposit, status.share]);
 
   useEffect(() => {
     updatePoolDeposit && updatePoolDeposit(index, isShow);
   }, [isShow, onlyDeposit, index, updatePoolDeposit]);
 
-  const myDeposit = (index: any) => {
-    console.log(index, typeof index);
+  // price api
+  const getPrice = async (wantToken: string, isLpToken = false) => {
+    if (isLpToken) {
+      try {
+        const prices = {
+          [token0]: 1,
+          [token1]: 2,
+        };
+        return await checkLPPrice(wantToken, prices);
+      } catch (err: any) {
+        console.log('Farms/FarmItem', err.message);
+        return 1;
+      }
+    }
+    return 1;
   };
 
-  // new states
-  const [state, { dispatch, checkERC20Balance }] = useBlockchainContext();
+  // pool status updator
+  const updatePoolStatus = async () => {
+    try {
+      const { poolBalance, poolInfo, totalAllocPoint, lithPerBlock } = await checkPoolStatus(
+        masterChefAddress,
+        id,
+        wantToken,
+      );
+      console.log('updatePoolStatus', id, isLp);
+      const wantTokenPrice = await getPrice(wantToken, isLp);
+      const rewardTokenPrice = await getPrice(rewardToken);
 
-  const [status, setStatus] = useState<FarmItemStatus>({
-    balance: toBigNum(100),
-    deposited: null,
-    tvl: null,
-    apr: null,
-    apy: null,
-  });
+      const tvl = wantTokenPrice * fromBigNum(poolBalance);
+      const rewardPerYear = lithPerBlock
+        .mul(poolInfo.allocPoint)
+        .mul(toBigNum((365 * 24 * 3600) / 15, 0))
+        .div(totalAllocPoint);
+
+      const apr =
+        Number(poolBalance) == 0
+          ? 0
+          : (fromBigNum(rewardPerYear) * rewardTokenPrice) /
+            (fromBigNum(poolBalance) * wantTokenPrice);
+
+      const numberOfCompoundingPerYear = 365; // daily compound
+      const apy =
+        Math.pow(1 + apr / numberOfCompoundingPerYear, numberOfCompoundingPerYear) - 1;
+
+      setStatus({
+        ...status,
+        tvl: tvl,
+        apr: apr * 100,
+        apy: apy * 100,
+        wantTokenPrice: Number(wantTokenPrice),
+      });
+
+      // save tvl to global state
+      dispatch({
+        type: 'tvls',
+        payload: {
+          [id]: tvl,
+        },
+      });
+    } catch (err: any) {
+      console.log('farmitem/updatePoolStatus', err.message);
+    }
+  };
+
+  const updateStatus = async () => {
+    if (state.signer) {
+      try {
+        const wantTokenPrice = await getPrice(wantToken, isLp);
+        const rewardTokenPrice = await getPrice(rewardToken);
+
+        const {
+          poolBalance,
+          poolInfo,
+          totalAllocPoint,
+          lithPerBlock,
+          userBalance,
+          userInfo,
+          pendingReward,
+          allowance,
+        } = await checkUserStatus(masterChefAddress, id, wantToken);
+
+        const tvl = wantTokenPrice * fromBigNum(poolBalance);
+        const deposited = userInfo.amount;
+        const share =
+          Number(poolBalance) == 0
+            ? 0
+            : Number(deposited.mul(fromBigNum(100, 0)).div(poolBalance));
+
+        const rewardPerYear = lithPerBlock
+          .mul(poolInfo.allocPoint)
+          .mul(toBigNum((365 * 24 * 3600) / 15, 0))
+          .div(totalAllocPoint);
+
+        const apr =
+          Number(poolBalance) == 0
+            ? 0
+            : (fromBigNum(rewardPerYear) * rewardTokenPrice) /
+              (fromBigNum(poolBalance) * wantTokenPrice);
+
+        const numberOfCompoundingPerYear = 365; // daily compound
+        const apy =
+          Math.pow(1 + apr / numberOfCompoundingPerYear, numberOfCompoundingPerYear) - 1;
+
+        setStatus({
+          ...status,
+          balance: userBalance,
+          deposited: deposited,
+          allowance: allowance,
+          tvl: tvl,
+          share: share,
+          pendingReward: fromBigNum(pendingReward),
+          apr: apr * 100,
+          apy: apy * 100,
+          isLoaded: true,
+          wantTokenPrice: Number(wantTokenPrice),
+        });
+        // save tvl to global state
+        dispatch({
+          type: 'tvls',
+          payload: {
+            [id]: tvl,
+          },
+        });
+      } catch (err: any) {
+        console.log('farms/farmItem/updateStatus', err);
+        setStatus({ ...status, balance: toBigNum(0) });
+      }
+    } else {
+      updatePoolStatus();
+    }
+  };
+
+  /* ----------- user action ----------- */
+  const setDeposit = async (amount: BigNumber) => {
+    try {
+      if (!status.isLoaded) throw new Error('state not loaded yet');
+
+      if (amount.gt(status.allowance)) {
+        const tx = await approveERC20(
+          wantToken,
+          masterChefAddress,
+          ethers.constants.MaxUint256,
+        );
+        await tx.wait();
+      }
+      const tx = await deposit(masterChefAddress, id, amount);
+      await tx.wait();
+      AddNotification('success', 'Deposit success', 'success');
+      updateStatus();
+    } catch (err: any) {
+      console.log('farmitem/setDeposit', err.message);
+    }
+  };
+  const setWithdraw = async (amount: BigNumber) => {
+    try {
+      const tx = await withdraw(masterChefAddress, id, amount);
+      await tx.wait();
+      AddNotification('success', 'withdraw success', 'success');
+      updateStatus();
+    } catch (err: any) {
+      console.log('farmitem/setWithdraw', err.message);
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      if (state.signer) {
-        try {
-          const balance = await checkERC20Balance(wantToken);
-          setStatus({ ...status, balance });
-        } catch (err: any) {
-          console.log('farms/farmItem', err);
-          setStatus({ ...status, balance: toBigNum(0) });
-        }
-      }
-    })();
+    updateStatus();
   }, [state.signer]);
 
   return (
@@ -222,12 +368,19 @@ const FarmItem: React.FC<FarmItemProps> = ({
             </StyledHeaderStatus>
           </StyledHeaderCell>
           <StyledHeaderCell paddingLeft={10} hiddenXs={true}>
-            <StyledHeaderDataValue highlight={true}>$0</StyledHeaderDataValue>
+            <StyledHeaderDataValue highlight={true}>
+              {status.deposited
+                ? '$' +
+                  numberWithCommas(
+                    styledNumber(fromBigNum(status.deposited) * status.wantTokenPrice),
+                  )
+                : '$0'}
+            </StyledHeaderDataValue>
           </StyledHeaderCell>
           <StyledHeaderCell paddingLeft={14} hiddenXs={true}>
             <StyledHeaderDataValue>
               {status.tvl ? (
-                '$' + numberWithCommas(status.tvl)
+                '$' + numberWithCommas(styledNumber(status.tvl))
               ) : (
                 <Loading size={'16px'} color={theme.color.white} />
               )}
@@ -239,7 +392,7 @@ const FarmItem: React.FC<FarmItemProps> = ({
                 <span className="field">APR</span>
                 <div className="value">
                   {status.apr ? (
-                    numberWithCommas(status.apr) + '%'
+                    numberWithCommas(styledNumber(status.apr)) + '%'
                   ) : farmUrl ? (
                     '-'
                   ) : (
@@ -251,7 +404,7 @@ const FarmItem: React.FC<FarmItemProps> = ({
                 <span className="field">APY</span>
                 <div className="value">
                   {status.apy ? (
-                    numberWithCommas(status.apy) + '%'
+                    numberWithCommas(styledNumber(status.apy)) + '%'
                   ) : farmUrl ? (
                     '-'
                   ) : (
@@ -278,7 +431,7 @@ const FarmItem: React.FC<FarmItemProps> = ({
             TVL:
             <StyledHeaderDataValue>
               {status.tvl ? (
-                '$' + numberWithCommas(status.tvl)
+                '$' + numberWithCommas(styledNumber(status.tvl))
               ) : (
                 <Loading size={'16px'} color={theme.color.white} />
               )}
@@ -288,7 +441,7 @@ const FarmItem: React.FC<FarmItemProps> = ({
             APR:
             <StyledHeaderDataValue>
               {status.apr ? (
-                numberWithCommas(status.apr) + '%'
+                numberWithCommas(styledNumber(status.apr)) + '%'
               ) : farmUrl ? (
                 '-'
               ) : (
@@ -300,7 +453,10 @@ const FarmItem: React.FC<FarmItemProps> = ({
             Deposited:
             <StyledHeaderDataValue highlight={true}>
               {status.deposited ? (
-                '$' + numberWithCommas(status.deposited)
+                '$' +
+                numberWithCommas(
+                  styledNumber(fromBigNum(status.deposited) * status.wantTokenPrice),
+                )
               ) : (
                 <Loading size={'16px'} color={theme.color.white} />
               )}
@@ -310,7 +466,7 @@ const FarmItem: React.FC<FarmItemProps> = ({
             APY:
             <StyledHeaderDataValue>
               {status.apy ? (
-                numberWithCommas(status.apy) + '%'
+                numberWithCommas(styledNumber(status.apy)) + '%'
               ) : farmUrl ? (
                 '-'
               ) : (
@@ -337,14 +493,17 @@ const FarmItem: React.FC<FarmItemProps> = ({
               <StyledControl>
                 <StyledControlItem className="balance">
                   <StakeLPComponent
-                    index={index}
-                    setDeposit={myDeposit}
+                    setDeposit={setDeposit}
                     poolConfig={poolConfig}
                     balance={status.balance}
                   />
                 </StyledControlItem>
                 <StyledControlItem className="deposited">
-                  <UnstakeLPComponent poolConfig={poolConfig} balance={status.deposited} />
+                  <UnstakeLPComponent
+                    poolConfig={poolConfig}
+                    balance={status.deposited}
+                    setWithdraw={setWithdraw}
+                  />
                 </StyledControlItem>
               </StyledControl>
             </StyledInnerContent>
@@ -370,15 +529,15 @@ const FarmItem: React.FC<FarmItemProps> = ({
               <div className="right">
                 <StyledTokenStaked>
                   Your Share:
-                  <span className="stake-highlight">0%</span>
+                  <span className="stake-highlight">{status.share}%</span>
                 </StyledTokenStaked>
                 <Spacer size="lg" />
                 <StylePendingRewards>
                   Rewards:
-                  <span className="amount">0</span>
+                  <span className="amount">{status.pendingReward}</span>
                   <span className="symbol">&nbsp;{rewardToken}</span>
                   <Spacer size="sm" />
-                  <Button>Claim</Button>
+                  <Button onClick={() => setDeposit(BigNumber.from(0))}>Claim</Button>
                 </StylePendingRewards>
               </div>
             </StyledClaimContainer>

@@ -1,11 +1,10 @@
 import { Farm, Market } from './iron-bank/config';
 
 export const Tokens: { [key: string]: string } = {
-  IRON: '0xD86b5923F3AD7b585eD81B448170ae026c65ae9a',
-  LITH: '0x1f5db218a6C41dF84bA8003a263563b86568a672',
-  MATIC: '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
-  USDC: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-  ETH: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+  LITH: '0x7c03EB96a42fF473A483626A7b45148590BBE1e1',
+  TEST0: '0x0E20b57D29AF79a955A06Fa14184472a7A9352Ee',
+  TEST1: '0x82CdceA6F37291C21FDb3eA41740904A999f7d7F',
+  TEST2: '0x8aa29e2daAB7ef7CDB6800d3A2b6feAc01B08ADA',
 };
 
 export const createAddLiquidityLink = (marketName: Market, token0: string, token1: string) => {
@@ -15,7 +14,10 @@ export const createAddLiquidityLink = (marketName: Market, token0: string, token
         Tokens[token1?.toUpperCase()] || ''
       }`;
     case 'DfynExchange':
-    case 'FirebirdFinance':
+    case 'SpookySwap':
+      return `https://spooky.fi/#/add/${Tokens[token0?.toUpperCase()] || ''}/${
+        Tokens[token1?.toUpperCase()] || ''
+      }`;
     case 'IronFinance':
     case 'SushiSwap':
       return `https://app.sushi.com/add/${Tokens[token0?.toUpperCase()] || ''}/${
@@ -35,7 +37,8 @@ export const createRemoveLiquidityLink = (
         Tokens[token1?.toUpperCase()] || ''
       }`;
     case 'DfynExchange':
-    case 'FirebirdFinance':
+    case 'SpookySwap':
+      return `https://spooky.fi/#/pool`;
     case 'IronFinance':
     case 'SushiSwap':
       return `https://app.sushi.com/remove/${Tokens[token0?.toUpperCase()] || ''}/${
@@ -45,9 +48,10 @@ export const createRemoveLiquidityLink = (
 };
 
 export const buyTokenLinks: { [key: string]: string } = {
-  LITH: 'https://quickswap.exchange/#/swap?outputCurrency=0x1f5db218a6C41dF84bA8003a263563b86568a672',
-  Test0:
-    'https://quickswap.exchange/#/swap?outputCurrency=0x0062d3BCf9b38B117bb3A73CfFBF2edc1490e192',
+  LITH: 'https://spooky.fi/#/swap?outputCurrency=0x7c03EB96a42fF473A483626A7b45148590BBE1e1',
+  Test0: 'https://spooky.fi/#/swap?outputCurrency=0x0E20b57D29AF79a955A06Fa14184472a7A9352Ee',
+  Test1: 'https://spooky.fi/#/swap?outputCurrency=0x82CdceA6F37291C21FDb3eA41740904A999f7d7F',
+  Test2: 'https://spooky.fi/#/swap?outputCurrency=0x8aa29e2daAB7ef7CDB6800d3A2b6feAc01B08ADA',
 };
 
 /* ROLE CONFIG PARTNER POOL
@@ -56,76 +60,65 @@ export const buyTokenLinks: { [key: string]: string } = {
 
 export const AllFarms: Farm[] = [
   {
-    masterChef: '0x5d20166274447EA150B4380f2806F0d33ee98FBD',
+    masterChef: '0xEf52F65f7766c1ada2c7B22a1eC524d8Fb90ddC5',
     rewardTokenSymbol: 'LITH',
     rewardTokenDecimals: 18,
-    rewardTokenAddress: '0x1f5db218a6C41dF84bA8003a263563b86568a672',
+    rewardTokenAddress: '0x7c03EB96a42fF473A483626A7b45148590BBE1e1',
     profitSharing: true,
     pools: [
       {
         id: 0,
         token0: 'Test0',
         wantSymbol: 'Test0',
-        wantToken: '0x0062d3BCf9b38B117bb3A73CfFBF2edc1490e192',
+        wantToken: '0x0E20b57D29AF79a955A06Fa14184472a7A9352Ee',
         rewardToken: 'LITH',
         isLp: false,
         stable: false,
         profitSharing: true,
-        market: 'IronFinance',
-        marketSymbol: 'IRONFINANCE',
+        market: 'SpookySwap',
+        marketSymbol: 'SPOOKYSWAP',
       },
       {
         id: 1,
         token0: 'Test1',
         wantSymbol: 'Test1',
-        wantToken: '0x57f404504094808d67334c719b6757dF3366bcB2',
+        wantToken: '0x82CdceA6F37291C21FDb3eA41740904A999f7d7F',
         rewardToken: 'LITH',
         isLp: false,
-        stable: false,
         profitSharing: true,
-        market: 'IronFinance',
-        marketSymbol: 'IRONFINANCE',
+        market: 'SpookySwap',
+        marketSymbol: 'SPOOKYSWAP',
       },
       {
         id: 2,
         token0: 'Test2',
         wantSymbol: 'Test2',
-        wantToken: '0x31932bcFcdf36462F530E4E7622f421bD9612017',
+        wantToken: '0x8aa29e2daAB7ef7CDB6800d3A2b6feAc01B08ADA',
         rewardToken: 'LITH',
         isLp: false,
         stable: false,
         profitSharing: true,
-        market: 'IronFinance',
-        marketSymbol: 'IRONFINANCE',
+        market: 'SpookySwap',
+        marketSymbol: 'SPOOKYSWAP',
       },
       {
         id: 3,
-        token0: 'Test3',
-        wantSymbol: 'Test3',
-        wantToken: '0x2C86f28eF0E0f07553D217d08a06c9a5B05c67B9',
+        token0: 'Test0',
+        token1: 'Test1',
         rewardToken: 'LITH',
-        isLp: false,
+        wantSymbol: 'Test0/Test1 LP',
+        wantToken: '0xB4D7bAbA4638b26dbeF38E6502807A16Fc8786c9',
+        isLp: true,
         stable: false,
-        profitSharing: true,
-        market: 'IronFinance',
-        marketSymbol: 'IRONFINANCE',
-      },
-      {
-        id: 4,
-        token0: 'Test4',
-        wantSymbol: 'Test4',
-        wantToken: '0x6A0CC49B31dA38Cf2de01a8ec782A1732F555ECd',
-        rewardToken: 'LITH',
-        isLp: false,
-        stable: false,
-        profitSharing: true,
-        market: 'IronFinance',
-        marketSymbol: 'IRONFINANCE',
+        // market: 'IronFinance',
+        // marketSymbol: 'IRONFINANCE',
+        market: 'SpookySwap',
+        marketSymbol: 'SPOOKYSWAP',
       },
     ],
   },
   // {
-  //     masterChef: '0x5d20166274447EA150B4380f2806F0d33ee98FBD',
+  //     masterChef: '0xEf52F65f7766c1ada2c7B22a1eC524d8Fb90ddC5',
   //     rewardTokenSymbol: 'LITH',
   //     deprecated: true,
   //     fundAddress: '0xf622A4e83ECbcfB7d8cb3007a3C6b03bCdA8666B',
@@ -170,7 +163,7 @@ export const AllFarms: Farm[] = [
   //     ],
   // },
   // {
-  //     masterChef: '0x5d20166274447EA150B4380f2806F0d33ee98FBD',
+  //     masterChef: '0xEf52F65f7766c1ada2c7B22a1eC524d8Fb90ddC5',
   //     treasury: '0x4a812C5EE699A40530eB49727E1818D43964324e',
   //     rewardTokenSymbol: 'USDC',
   //     rewardTokenAddress: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
@@ -196,7 +189,7 @@ export const AllFarms: Farm[] = [
   //     ],
   // },
   // {
-  //     masterChef: '0x5d20166274447EA150B4380f2806F0d33ee98FBD',
+  //     masterChef: '0xEf52F65f7766c1ada2c7B22a1eC524d8Fb90ddC5',
   //     rewardTokenSymbol: 'LITH',
   //     inactive: true,
   //     pools: [

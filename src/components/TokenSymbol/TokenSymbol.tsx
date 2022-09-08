@@ -19,6 +19,7 @@ import SUSHISWAPLogo from '../../assets/img/SUSHISWAP.png';
 import QUICKSWAPLogo from '../../assets/img/QUICKSWAP_LOGO.png';
 import FIREBIRDLogo from '../../assets/img/FIREBIRD.svg';
 import IRONFINANCELogo from '../../assets/img/IRON-logo.png';
+import SPOOKYSWAPLogo from '../../assets/img/SPOOKY-logo.png';
 
 const logosBySymbol: { [title: string]: string } = {
   USDC: USDCLogo,
@@ -41,6 +42,7 @@ const logosBySymbol: { [title: string]: string } = {
   QUICKSWAP: QUICKSWAPLogo,
   FIREBIRD: FIREBIRDLogo,
   IRONFINANCE: IRONFINANCELogo,
+  SPOOKYSWAP: SPOOKYSWAPLogo,
 };
 
 type TokenSymbolProps = {

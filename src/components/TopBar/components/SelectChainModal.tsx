@@ -23,7 +23,7 @@ const SelectChainModal: React.FC<ModalProps> = ({ onDismiss }) => {
         <StyledChainItem select onClick={onDismiss}>
           <i className="fas fa-check-circle" />
           <img src={imgFantomChain} />
-          Fantom testnet
+          Fantom mainnet
         </StyledChainItem>
         {/* <StyledChainItem href="https://app.iron.finance/" rel="noopener noreferrer">
                     <i className="fas fa-check-circle" />

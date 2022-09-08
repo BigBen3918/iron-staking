@@ -9,9 +9,14 @@ import Spacer from 'src/components/Spacer';
 interface UnstakeLPComponentProps {
   poolConfig: PoolConfig;
   balance: any | null;
+  setWithdraw?: any;
 }
 
-const UnstakeLPComponent: React.FC<UnstakeLPComponentProps> = ({ poolConfig, balance }) => {
+const UnstakeLPComponent: React.FC<UnstakeLPComponentProps> = ({
+  poolConfig,
+  balance,
+  setWithdraw,
+}) => {
   const { token0, token1 } = poolConfig;
   const [amount, setAmount] = useState(BigNumber.from(0));
   const refInput = useRef(null);
@@ -39,9 +44,16 @@ const UnstakeLPComponent: React.FC<UnstakeLPComponentProps> = ({ poolConfig, bal
         hideMax
       />
       <StyledFooter>
-        <ButtonUnstake>Withdraw</ButtonUnstake>
+        <ButtonUnstake onClick={() => setWithdraw(amount)}>Withdraw</ButtonUnstake>
         <Spacer size="md" />
-        <ButtonUnstake>Withdraw all</ButtonUnstake>
+        <ButtonUnstake
+          onClick={() => {
+            setAmount(balance);
+            setWithdraw(balance);
+          }}
+        >
+          Withdraw all
+        </ButtonUnstake>
       </StyledFooter>
     </StyledContainer>
   );

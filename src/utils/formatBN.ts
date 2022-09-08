@@ -10,6 +10,16 @@ export const numberWithCommas = (x: string) => {
   return parts.join('.');
 };
 
+export const styledNumber = (x: number) => {
+  if (x > 10 ** 9)
+    return String(
+      Math.ceil(x / Math.pow(10, Math.ceil(Math.log10(x + 1)) - 3)) *
+        Math.pow(10, Math.ceil(Math.log10(x + 1))),
+    );
+  if (x > 1000) return x.toFixed(0);
+  return x.toFixed(2);
+};
+
 export const getDisplayNumber = (
   value: BigNumber,
   decimals = 18,

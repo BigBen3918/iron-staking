@@ -10,7 +10,7 @@ const SelectChainButton: React.FC = () => {
   return (
     <StyledButton onClick={onPresentChainModal}>
       <img src={iconFantom} />
-      <span>Fantom testnet</span>
+      <span>Fantom mainnet</span>
     </StyledButton>
   );
 };

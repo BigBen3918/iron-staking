@@ -5,9 +5,16 @@ export type Market =
   | 'SushiSwap'
   | 'QuickSwap'
   | 'FirebirdFinance'
-  | 'IronFinance';
+  | 'IronFinance'
+  | 'SpookySwap';
 
-export type MarketSymbol = 'DFYN' | 'SUSHISWAP' | 'QUICKSWAP' | 'FIREBIRD' | 'IRONFINANCE';
+export type MarketSymbol =
+  | 'DFYN'
+  | 'SUSHISWAP'
+  | 'QUICKSWAP'
+  | 'FIREBIRD'
+  | 'IRONFINANCE'
+  | 'SPOOKYSWAP';
 
 export type PoolConfig = {
   masterChefAddress: string;
